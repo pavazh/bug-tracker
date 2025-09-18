@@ -12,8 +12,8 @@ pipeline {
             steps {
                 dir('bugtracker-backend') {
                     sh '''
-        export HOME=/var/jenkins_home
-        mkdir -p $HOME/.cache/go-build
+        export GOCACHE=$(pwd)/.cache/go-build
+        mkdir -p $GOCACHE
         go test -v ./... | tee result.log | go-junit-report > report.xml
     '''
                     junit 'report.xml'
