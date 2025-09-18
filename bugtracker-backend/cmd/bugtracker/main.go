@@ -87,9 +87,14 @@ func createServer() *http.Server {
 	apiRouter := r.PathPrefix("/api").Subrouter()
 	handlers.RegisterRoutes(apiRouter)
 
-	log.Printf("Starting server on :8080")
-	return &http.Server{
-		Addr:    "0.0.0.0:8080",
-		Handler: handler,
-	}
+	port := os.Getenv("PORT")
+if port == "" {
+    port = "8080"
+}
+log.Printf("Starting server on :%s", port)
+
+return &http.Server{
+    Addr:    "0.0.0.0:" + port,
+    Handler: handler,
+}
 }
