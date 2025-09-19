@@ -2,16 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Unit test backend') {
-            agent {
-                docker {
-                    image 'snakee/golang-junit:1.21'
-                    reuseNode true
-                }
-            }
-            steps {
-                dir('bugtracker-backend') {
-                    sh '''
+        stage { 'Execute unit tests' } {
+            parallel {
+                    stage('Unit test backend') {
+                    agent {
+                        docker {
+                            image 'snakee/golang-junit:1.21'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        dir('bugtracker-backend') {
+                            sh '''
         export WORKSPACE=$(pwd)
 
         # Set writable Go cache directories
@@ -29,20 +31,23 @@ pipeline {
         mkdir -p reports
         mv coverage.out reports/
     '''
-                    junit 'report.xml'
-                }
-            }
-            post {
-                always {
-                    junit 'bugtracker-backend/report.xml'
-                    publishHTML target:[
+                            junit 'report.xml'
+                        }
+                    }
+                    post {
+                        always {
+                            junit 'bugtracker-backend/report.xml'
+                            publishHTML target:[
                         reportDir: 'bugtracker-backend/reports',
                         reportFiles: 'coverage.html',
                         reportName: 'Backend Coverage Report'
                     ]
-                }
+                        }
+                    }
+                    }
             }
-        }
+    }
+
         stage('Unit test frontend') {
             agent {
                 docker {
