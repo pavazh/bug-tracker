@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage { 'Execute unit tests' } {
+        stage('Execute unit tests') {
             parallel {
                     stage('Unit test backend') {
                     agent {
@@ -46,7 +46,7 @@ pipeline {
                     }
                     }
             }
-    }
+        }
 
         stage('Unit test frontend') {
             agent {
