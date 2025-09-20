@@ -23,7 +23,7 @@ jobs:
       - name: Execute Backend Unit Tests
         working-directory: ./bugtracker-backend
         run: 
-          go test -json -coverprofile=coverage.out -covermode=atomic ./...   
+          go test -json -coverprofile=coverage.out -covermode=atomic ./... > test-output.json  
           go tool cover -func=coverage.out > coverage.txt    
           
           echo "## Go Test Coverage Report" >> $GITHUB_STEP_SUMMARY
@@ -39,7 +39,7 @@ jobs:
         with:
           name: Backend Unit Tests Report
           path: bugtracker-backend/test-results.xml
-          reporter: jest-junit
+          reporter: java-junit
 
   unit-tests-frontend:
     needs: unit-tests-backend
